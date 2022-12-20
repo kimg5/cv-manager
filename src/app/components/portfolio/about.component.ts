@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { PortfolioService } from 'src/app/service/portfolio.service';
 
 @Component({
   selector: 'app-about',
@@ -21,17 +22,22 @@ import { FormGroup } from '@angular/forms';
 })
 export class AboutComponent implements OnInit {
 
-  @Input() aboutG?: FormGroup;
+  aboutG: FormGroup;
   txtInputClass!: string;
 
   image: any;
 
-  constructor() {
+  constructor(private fb: FormBuilder,private service: PortfolioService) {
     this.txtInputClass = "text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full";
+
+    this.aboutG = this.fb.group({
+      image: ['', Validators.required]
+    })
    }
 
   ngOnInit(): void {
-    this.image = this.aboutG!.get('image');
+    this.image = this.aboutG.get('image');
+    this.service.setAboutG(this.aboutG);
   }
 
 }

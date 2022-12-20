@@ -3,15 +3,15 @@ export class LearningExperience {
     school: string;
     city: string;
     country: string;
-    startTime: string;
-    endTime: string;
+    startTime: Date;
+    endTime: Date;
   
     constructor() {
       this.degree = 'degree';
       this.school = 'school';
       this.city = 'city';
       this.country = 'country';
-      this.startTime = 'yyyy-MM-dd';
-      this.endTime = 'yyyy-MM-dd';
+      this.startTime = new Date();
+      this.endTime = new Date();
     }
   }

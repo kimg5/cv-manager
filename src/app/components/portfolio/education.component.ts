@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { ConfirmationService } from 'primeng/api';
 import { MessageService } from 'primeng/api';
 import { LearningExperience } from 'src/app/domain/learning-experience';
+import { PortfolioService } from 'src/app/service/portfolio.service';
 
 @Component({
   selector: 'app-education',
@@ -31,8 +32,8 @@ import { LearningExperience } from 'src/app/domain/learning-experience';
                 <td>{{item.school}}</td>
                 <td>{{item.city}}</td>
                 <td>{{item.country}}</td>
-                <td>{{item.startTime}}</td>
-                <td>{{item.endTime}}</td>
+                <td>{{item.startTime|date:'MM/yyyy'}}</td>
+                <td>{{item.endTime|date:'MM/yyyy'}}</td>
                 <td>
                     <button pButton icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" (click)="edit(item)"></button>
                     <button pButton icon="pi pi-trash" class="p-button-rounded p-button-warning" (click)="deleteItem(item)"></button>
@@ -62,11 +63,11 @@ import { LearningExperience } from 'src/app/domain/learning-experience';
         </div>
         <div class="p-field">
             <label for="starttime">Start Time</label>
-            <input type="text" pInputText id="starttime" [(ngModel)]="editItem!.startTime" required autofocus />
+            <p-calendar id="starttime" [(ngModel)]="editItem!.startTime" view="month" dateFormat="mm/yy"  [readonlyInput]="true" ></p-calendar>
         </div>
         <div class="p-field">
             <label for="endtime">End Time</label>
-            <input type="text" pInputText id="endtime" [(ngModel)]="editItem!.endTime" required autofocus />
+            <p-calendar id="endtime" [(ngModel)]="editItem!.endTime" view="month" dateFormat="mm/yy"  [readonlyInput]="true" ></p-calendar>
         </div>
       </ng-template>
     
@@ -83,24 +84,19 @@ import { LearningExperience } from 'src/app/domain/learning-experience';
 })
 export class EducationComponent implements OnInit {
 
-  @Input() items!: any[];
+  items!: any[];
 
-  vid: number = 0;
   isOpen: boolean = false;
   editItem: any;
 
-  constructor(private confirmationService: ConfirmationService) { }
+  constructor(private confirmationService: ConfirmationService,private service: PortfolioService) { }
 
   ngOnInit(): void {
-    this.items!.map(item => {
-      item.vid = this.vid++;
-    })
+    this.items = this.service.getEducations();
   }
 
   openNew() {
-    let le: any = new LearningExperience();
-    le.vid = this.vid++;
-    this.items!.push(le);
+    this.items = this.service.newEducation();
   }
 
   edit(item: any) {
@@ -114,9 +110,7 @@ export class EducationComponent implements OnInit {
       header: 'Confirm',
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
-        let index = this.findIndexByVid(item.vid);
-        if (index != -1)
-          this.items!.splice(index, 1);
+       this.items = this.service.deleteEducation(item);
       }
     });
   }
@@ -127,19 +121,9 @@ export class EducationComponent implements OnInit {
 
   save() {
     if (this.editItem!.school.trim()) {
-      let index = this.findIndexByVid(this.editItem.vid);
-      if (index != -1) this.items![index] = { ...this.editItem };
-      this.items = [...this.items!];
+      this.items = this.service.updateEducation(this.editItem);
       this.editItem = {};
     }
     this.isOpen = false;
-  }
-
-  findIndexByVid(vid: number): number {
-    for (let i = 0; i < this.items!.length; i++) {
-      if (this.items![i].vid === vid)
-        return i;
-    }
-    return -1;
   }
 }

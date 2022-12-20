@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { ConfirmationService } from 'primeng/api';
 import { MessageService } from 'primeng/api';
 import { Project } from 'src/app/domain/project';
+import { PortfolioService } from 'src/app/service/portfolio.service';
 
 @Component({
   selector: 'app-projects',
@@ -73,23 +74,19 @@ import { Project } from 'src/app/domain/project';
 })
 export class ProjectsComponent implements OnInit {
 
-  @Input() items!: any[];
-  vid: number = 0;
+  items!: any[];
+
   isOpen: boolean = false;
   editItem: any;
 
-  constructor(private confirmationService: ConfirmationService) { }
+  constructor(private confirmationService: ConfirmationService, private service: PortfolioService) { }
 
   ngOnInit(): void {
-    this.items!.map(item => {
-      item.id = this.vid++;
-    })
+    this.items = this.service.getProjects();
   }
 
   openNew() {
-    let le: any = new Project();
-    le.vid = this.vid++;
-    this.items!.push(le);
+    this.items = this.service.newProject();
   }
 
   edit(item: any) {
@@ -103,9 +100,7 @@ export class ProjectsComponent implements OnInit {
       header: 'Confirm',
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
-        let index = this.findIndexByVid(item.vid);
-        if (index != -1)
-          this.items!.splice(index, 1);
+        this.items = this.service.deleteProject(item);
       }
     });
   }
@@ -116,20 +111,9 @@ export class ProjectsComponent implements OnInit {
 
   save() {
     if (this.editItem!.title.trim()) {
-      let index = this.findIndexByVid(this.editItem.vid);
-      if (index != -1) this.items![index] = { ...this.editItem };
-      this.items = [...this.items!];
+      this.items = this.service.updateProject(this.editItem);
       this.editItem = {};
     }
     this.isOpen = false;
   }
-
-  findIndexByVid(vid: number): number {
-    for (let i = 0; i < this.items!.length; i++) {
-      if (this.items![i].vid === vid)
-        return i;
-    }
-    return -1;
-  }
-
 }

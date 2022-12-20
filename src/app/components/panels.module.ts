@@ -14,6 +14,7 @@ import {TableModule} from 'primeng/table';
 import {ToolbarModule} from 'primeng/toolbar';
 import {ConfirmDialogModule} from 'primeng/confirmdialog';
 import {DialogModule} from 'primeng/dialog';
+import {CalendarModule} from 'primeng/calendar';
 
 import { PortfolioComponent } from './portfolio/portfolio.component';
 import { ProfileComponent } from './profile/profile.component';
@@ -67,7 +68,8 @@ import { PreviewComponent } from './portfolio/preview.component';
     TableModule,
     ToolbarModule,
     ConfirmDialogModule,
-    DialogModule    
+    DialogModule,
+    CalendarModule    
   ],
   exports:[
     PortfolioComponent,
