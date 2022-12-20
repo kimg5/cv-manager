@@ -1,0 +1,36 @@
+<p-scrollPanel [style]="{ width: '100vw', height: '100vh' }">
+    <p-tabView>
+        <p-tabPanel header="Header" leftIcon="pi pi-book">
+            <div class="header">
+                <app-header [headerG]="getHeaderG()"></app-header>
+            </div>
+        </p-tabPanel>
+        <p-tabPanel header="About Me" leftIcon="pi pi-book">
+            <div class="about">
+                <app-about [aboutG]="getAboutG()"></app-about>
+            </div>
+        </p-tabPanel>
+        <p-tabPanel header="Skills" leftIcon="pi pi-book">
+            <div class="skills">
+                <app-skills
+                    [skillsG]="getSkillsG()" (skillsTabWorking)="checkSkills($event)"
+                ></app-skills>
+            </div>
+        </p-tabPanel>
+        <p-tabPanel header="Educations" leftIcon="pi pi-book">
+            <div class="education">
+                <app-education [items]="les"></app-education>
+            </div>
+        </p-tabPanel>
+        <p-tabPanel header="Portfolios" leftIcon="pi pi-book">
+            <div class="projects">
+                <app-projects [items]="projects"></app-projects>
+            </div>
+        </p-tabPanel>
+        <p-tabPanel header="Preview and Submit" leftIcon="pi pi-book">
+            <div class="preview">
+                <app-preview [group]="rootGroup" [les]="les" [projects]="projects" [skillMap]="skillMap"></app-preview>
+            </div>
+        </p-tabPanel>
+    </p-tabView>
+</p-scrollPanel>

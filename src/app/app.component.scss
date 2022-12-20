@@ -1,0 +1,15 @@
+:host::ng-deep {
+    .dock-window {
+        width: 100vw;
+        height: 100vh;
+        position: relative;
+        background-image: url("../assets/images/dock/window.jpg");
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+
+    .p-dock {
+        z-index: 9999;
+        margin-bottom: 2px;
+    }
+}
