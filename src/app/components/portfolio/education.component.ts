@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ConfirmationService } from 'primeng/api';
 import { MessageService } from 'primeng/api';
-import { LearningExperience } from 'src/app/domain/learning-experience';
+import { Education } from 'src/app/domain/education';
 import { PortfolioService } from 'src/app/service/portfolio.service';
 
 @Component({
@@ -20,7 +20,7 @@ import { PortfolioService } from 'src/app/service/portfolio.service';
             <tr>
                 <th style="min-width:15rem">Degree</th>
                 <th>School</th>
-                <th>City</th>
+                <th>Subject</th>
                 <th>Country</th>
                 <th>Start Time</th>
                 <th>End Time</th>
@@ -30,7 +30,7 @@ import { PortfolioService } from 'src/app/service/portfolio.service';
             <tr>
                 <td>{{item.degree}}</td>
                 <td>{{item.school}}</td>
-                <td>{{item.city}}</td>
+                <td>{{item.subject}}</td>
                 <td>{{item.country}}</td>
                 <td>{{item.startTime|date:'MM/yyyy'}}</td>
                 <td>{{item.endTime|date:'MM/yyyy'}}</td>
@@ -54,8 +54,8 @@ import { PortfolioService } from 'src/app/service/portfolio.service';
             <input type="text" pInputText id="school" [(ngModel)]="editItem!.school" required autofocus />
         </div>
         <div class="p-field">
-            <label for="city">City</label>
-            <input type="text" pInputText id="city" [(ngModel)]="editItem!.city"  autofocus />
+            <label for="city">Subject</label>
+            <input type="text" pInputText id="city" [(ngModel)]="editItem!.subject"  autofocus />
         </div>
         <div class="p-field">
             <label for="country">Country</label>

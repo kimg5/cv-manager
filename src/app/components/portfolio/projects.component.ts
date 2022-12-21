@@ -40,12 +40,12 @@ import { PortfolioService } from 'src/app/service/portfolio.service';
         </ng-template>
       </p-table>
 
-      <p-dialog [(visible)]="isOpen" [style]="{width: '450px'}" header="Details" [modal]="true" styleClass="p-fluid">
+      <p-dialog [(visible)]="isOpen" [style]="{width: '600px',height:'400px'}" header="Details" [modal]="true" styleClass="p-fluid">
         <ng-template pTemplate="content">
           <div class="p-field">
             <label for="name">Title</label>
             <input type="text" pInputText id="name" [(ngModel)]="editItem!.title" autofocus />
-            <small class="p-invalid" *ngIf="!editItem!.degree">title is required.</small>
+            <small class="p-invalid" *ngIf="!editItem!.title">title is required.</small>
         </div>
         <div class="p-field">
             <label for="github">Github</label>
@@ -57,7 +57,7 @@ import { PortfolioService } from 'src/app/service/portfolio.service';
         </div>
         <div class="p-field">
             <label for="image">Image</label>
-            <input type="file" id="image" [(ngModel)]="editItem!.image"  autofocus />
+            <input type="file" id="image" [(ngModel)]="editItem!.image"  autofocus (change)="catchFile($event,editItem)"/>
         </div>
       </ng-template>
     
@@ -79,7 +79,7 @@ export class ProjectsComponent implements OnInit {
   isOpen: boolean = false;
   editItem: any;
 
-  constructor(private confirmationService: ConfirmationService, private service: PortfolioService) { }
+  constructor(private confirmationService: ConfirmationService, public service: PortfolioService) { }
 
   ngOnInit(): void {
     this.items = this.service.getProjects();
@@ -87,6 +87,7 @@ export class ProjectsComponent implements OnInit {
 
   openNew() {
     this.items = this.service.newProject();
+    console.log(this.items);
   }
 
   edit(item: any) {
@@ -116,4 +117,8 @@ export class ProjectsComponent implements OnInit {
     }
     this.isOpen = false;
   }
+
+  catchFile($event: any,editItem: any) {
+　   this.service.catchProjectFile($event,'pro' + editItem!.vid);
+  }  
 }

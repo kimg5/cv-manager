@@ -100,7 +100,7 @@ export class PreviewComponent {
   }
 
   publish(){
-    console.log('publish');
+    this.service.publish();
   }
 
 }

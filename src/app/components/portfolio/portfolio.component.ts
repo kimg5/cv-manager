@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Form } from '@angular/forms';
 import { Validators } from '@angular/forms';
-import { LearningExperience } from 'src/app/domain/learning-experience';
+import { Education } from 'src/app/domain/education';
 import { Project } from 'src/app/domain/project';
 
 @Component({

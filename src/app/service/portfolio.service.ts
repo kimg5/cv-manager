@@ -1,12 +1,15 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable, ɵclearResolutionOfComponentResourcesQueue } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { LearningExperience } from '../domain/learning-experience';
+import { Education } from '../domain/education';
 import { Project } from '../domain/project';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PortfolioService {
+
+  static url: string = 'http://localhost:3001/portfolio/portfolios/';
 
   public headerG!: FormGroup;
   public aboutG!: FormGroup;
@@ -27,14 +30,20 @@ export class PortfolioService {
   public projects!: any[]
   public proVid = 0;
 
-  constructor() {
+  public fileMap!: Map<string, any>;
+  public projectFileMap!: Map<string, any>;
+
+  constructor(private http: HttpClient) {
     this.educations = [];
-    let item = new LearningExperience();
+    let item = new Education();
     this.educations.push(item);
 
     this.projects = [];
     let project = new Project();
     this.projects.push(project);
+
+    this.fileMap = new Map();
+    this.projectFileMap = new Map();
   }
 
   public setHeaderG(headerG: FormGroup) {
@@ -68,7 +77,6 @@ export class PortfolioService {
       educations: this.educations,
       projects: this.projects
     }
-    console.log(this.skillMap)
     return results;
   }
 
@@ -98,7 +106,7 @@ export class PortfolioService {
   }
 
   public newEducation() {
-    let le: any = new LearningExperience();
+    let le: any = new Education();
     le.vid = this.eduVid++;
     this.educations.push(le);
     return this.educations;
@@ -120,7 +128,7 @@ export class PortfolioService {
 
   findIndexByVid(vid: number, type: string): number {
     let items = this.educations;
-    if (type === 'projects') {
+    if (type === 'project') {
       items = this.projects;
     }
     for (let i = 0; i < items.length; i++) {
@@ -157,4 +165,82 @@ export class PortfolioService {
     return this.projects;
   }
 
+  publish() {
+    console.log('publish');
+
+    let formData: FormData = new FormData();
+
+    formData.append("username", "kim5");
+    formData.append("password", "kim");
+    if (this.fileMap.get('logo')) {
+      formData.append("header-logo", this.fileMap.get('logo'));
+    }
+
+    formData.append("header[Name]", this.headerG.get('name')?.value);
+    formData.append("header[Title]", this.headerG.get('title')?.value);
+
+    formData.append("education", JSON.stringify(this.educations));
+    formData.append("projects", JSON.stringify(this.projects));
+    formData.append("experience", JSON.stringify(this.buildSkills()));
+
+
+    if (this.fileMap.get('cv')) {
+      formData.append("header-cv", this.fileMap.get('cv'));
+    }
+    if (this.fileMap.get('aboutPhoto')) {
+      formData.append("aboutPhoto", this.fileMap.get('aboutPhoto'));
+    }
+
+    this.projectFileMap.forEach((file, filename) => {
+      formData.append(filename, file);
+    })
+
+    this.http.post(PortfolioService.url, formData, { reportProgress: true, responseType: 'json' }).subscribe(resp => {
+      console.log(resp);
+    });
+  }
+
+  catchProjectFile($event: any, filename: string) {
+    console.log("catchProjectFile");
+    if ($event.target.files.length > 0) {
+      this.projectFileMap.set(filename, $event.target.files[0]);
+    }
+  }
+
+  catchFile($event: any, filename: string) {
+    if ($event.target.files.length > 0) {
+      this.fileMap.set(filename, $event.target.files[0]);
+    }
+  }
+
+  buildSkills() {
+    let exps: any = [];
+    if (this.skillMap.get('frontend')) {
+      let items = [];
+      for (let skill of this.skillMap.get('frontend')) {
+        let item = { skill: skill, level: 'experienced' };
+        items.push(item);
+      }
+      exps.push({
+        title: this.frontendTitle,
+        key: this.frontendKey,
+        css: this.frontendCss,
+        skills: items
+      })
+    }
+    if (this.skillMap.get('backend')) {
+      let items = [];
+      for (let skill of this.skillMap.get('backend')) {
+        let item = { skill: skill, level: 'experienced' };
+        items.push(item);
+      }
+      exps.push({
+        title: this.backendTitle,
+        key: this.backendKey,
+        css: this.backendCss,
+        skills: items
+      })
+    }
+    return exps;
+  }
 }

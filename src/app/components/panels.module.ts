@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { HttpClientModule } from '@angular/common/http';
 
 import {ScrollPanelModule} from 'primeng/scrollpanel';
 import {TabViewModule} from 'primeng/tabview';
@@ -55,6 +56,8 @@ import { PreviewComponent } from './portfolio/preview.component';
   ],
   imports: [
     CommonModule,
+    HttpClientModule,
+
     ScrollPanelModule,
     TabViewModule,
     ReactiveFormsModule,

@@ -9,7 +9,7 @@ import { PortfolioService } from 'src/app/service/portfolio.service';
     <div class="p-fluid grid">
       <div class="field col-5">
         <label for="image">Image</label>
-        <input id="image" type="file" class={{txtInputClass}} formControlName="image">
+        <input id="image" type="file" class={{txtInputClass}} formControlName="image"  (change)="service.catchFile($event,'aboutPhoto')">
         <div *ngIf="image.invalid && (image.dirty || image.touched)">
           <p class="p-error block">Image is not correct.</p>
         </div>
@@ -27,7 +27,7 @@ export class AboutComponent implements OnInit {
 
   image: any;
 
-  constructor(private fb: FormBuilder,private service: PortfolioService) {
+  constructor(private fb: FormBuilder,public service: PortfolioService) {
     this.txtInputClass = "text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full";
 
     this.aboutG = this.fb.group({

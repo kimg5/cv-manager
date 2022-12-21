@@ -26,15 +26,15 @@ import { PortfolioService } from 'src/app/service/portfolio.service';
       </div>  
       <div class="field col-5">
         <label for="image">Image</label>
-        <input id="image" type="file" class={{txtInputClass}} formControlName="image">
+        <input id="image" type="file" class={{txtInputClass}} formControlName="image"  (change)="service.catchFile($event,'logo')">
         <div *ngIf="image.invalid && (image.dirty)">
           <p class="p-error block">Image is not correct.</p>
         </div>
       </div>
       <div class="field col-5">
         <label for="cv">CV</label>
-        <input id="cv" type="file" class={{txtInputClass}} formControlName="cv">
-        <div *ngIf="image.invalid && (cv.dirty)">
+        <input id="cv" type="file" class={{txtInputClass}} formControlName="cv" (change)="service.catchFile($event,'cv')">
+        <div *ngIf="cv.invalid && (cv.dirty)">
           <p class="p-error block">CV is not correct.</p>
         </div>
       </div>
@@ -52,7 +52,7 @@ export class HeaderComponent implements OnInit {
   image: any;
   cv: any;
 
-  constructor(private fb: FormBuilder,private service: PortfolioService) {
+  constructor(private fb: FormBuilder,public service: PortfolioService) {
     this.txtInputClass = "text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full";
 
     this.headerG = this.fb.group({
