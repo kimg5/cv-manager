@@ -17,12 +17,12 @@
         </p-tabPanel>
         <p-tabPanel header="Educations" leftIcon="pi pi-book">
             <div class="education">
-                <app-education></app-education>
+                <app-education [items]="service.educations"></app-education>
             </div>
         </p-tabPanel>
         <p-tabPanel header="Portfolios" leftIcon="pi pi-book">
             <div class="projects">
-                <app-projects></app-projects>
+                <app-projects [items]="service.projects"></app-projects>
             </div>
         </p-tabPanel>
         <p-tabPanel header="Preview and Submit" leftIcon="pi pi-book">

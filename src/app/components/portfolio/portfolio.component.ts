@@ -1,8 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Form } from '@angular/forms';
-import { Validators } from '@angular/forms';
-import { Education } from 'src/app/domain/education';
-import { Project } from 'src/app/domain/project';
+import { PortfolioService } from 'src/app/service/portfolio.service';
 
 @Component({
   selector: 'app-portfolio',
@@ -10,5 +7,5 @@ import { Project } from 'src/app/domain/project';
   styleUrls: ['./portfolio.component.scss'],
 })
 export class PortfolioComponent {
-  constructor() {}
+  constructor(public service: PortfolioService) {}
 }

@@ -1,7 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit} from '@angular/core';
 import { ConfirmationService } from 'primeng/api';
-import { MessageService } from 'primeng/api';
-import { Education } from 'src/app/domain/education';
 import { PortfolioService } from 'src/app/service/portfolio.service';
 
 @Component({
@@ -84,7 +82,7 @@ import { PortfolioService } from 'src/app/service/portfolio.service';
 })
 export class EducationComponent implements OnInit {
 
-  items!: any[];
+  @Input() items!: any[];
 
   isOpen: boolean = false;
   editItem: any;

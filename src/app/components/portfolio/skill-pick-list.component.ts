@@ -17,18 +17,17 @@ import { PortfolioService } from 'src/app/service/portfolio.service';
       </p-pickList>
   `,
 })
-export class SkillPickListComponent{
+export class SkillPickListComponent {
   @Input() skills!: any;
   @Input() key!: string;
+  @Input() selectedSkills: any;
  
   txtInputClass!: string;
-  selectedSkills: any;
-
+  
   constructor(private service: PortfolioService) {
     this.txtInputClass = "text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full";
-    this.selectedSkills = [];
   }
-
+  
   checkSelectedSkills(e: any) {
     this.service.updateSkills(this.key,this.selectedSkills);
   }

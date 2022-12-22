@@ -1,8 +1,9 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Injectable, ɵclearResolutionOfComponentResourcesQueue } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Education } from '../domain/education';
 import { Project } from '../domain/project';
+import { SkillsService } from './skills.service';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +16,9 @@ export class PortfolioService {
   public aboutG!: FormGroup;
 
   public skillsG!: FormGroup;
-  public skillMap!: Map<string, any>;
+  public skillMap: Map<string, any> = new Map();
+  public allFrontSkills : any[];
+  public allBackSkills : any[]
 
   public frontendKey: string = "frontend";
   public frontendTitle: string = "Frontend Skills";
@@ -33,21 +36,64 @@ export class PortfolioService {
   public fileMap!: Map<string, any>;
   public projectFileMap!: Map<string, any>;
 
-  constructor(private http: HttpClient) {
-    this.educations = [];
-    let item = new Education();
-    this.educations.push(item);
-
-    this.projects = [];
-    let project = new Project();
-    this.projects.push(project);
-
+  constructor(private http: HttpClient,private skillsService: SkillsService) {
     this.fileMap = new Map();
     this.projectFileMap = new Map();
+    this.allBackSkills = skillsService.getBackendSkills();
+    this.allFrontSkills = skillsService.getFrontendSkills();
   }
 
   public setHeaderG(headerG: FormGroup) {
     this.headerG = headerG;
+  }
+
+  public getPortfolio(username: string) {
+    this.http.get<any>(PortfolioService.url + username).subscribe(resp => {
+      console.log(resp);
+      if(resp.success){
+        console.log('---------------');
+        let data = resp.content;
+        console.log(data);
+    
+        this.initHeader(data)
+        this.educations = data.education;
+        this.projects = data.projects;
+        this.initSkills(data.experience);
+      }
+    })
+  }
+  
+  initHeader(data:any) {
+    let header = data.header;
+    let info = data.info;
+    this.headerG!.get('title')!.setValue(header.Title);
+    this.headerG!.get('name')!.setValue(header.Name);
+    //    this.headerG!.get('description')!.setValue(header.Description);
+    this.headerG!.get('email')!.setValue(info.email);
+    this.headerG!.get('linkedin')!.setValue(info.linkedin);
+    this.headerG!.get('github')!.setValue(info.github);
+  }
+  
+  initSkills(data: any){
+    for(let group of data){
+      let items: any = [];
+      for(let skill of group.skills){
+        items.push(skill.skill);
+        let available: any ;
+        if(group.key === 'backend'){
+          available = this.allBackSkills;
+        }else available = this.allFrontSkills;
+
+        for(let i = 0 ; i < available.length ; i++){
+          if(available[i].toUpperCase() === skill.skill.toUpperCase()){
+            available.splice(i, 1);
+            break;
+          }
+        }
+      }
+      this.skillMap.set(group.key, items);
+    }
+
   }
 
   public getPreviews() {
@@ -84,9 +130,8 @@ export class PortfolioService {
     this.aboutG = aboutG;
   }
 
-  public setSkills(skillsG: FormGroup, skillMap: Map<string, any>) {
+  public setSkills(skillsG: FormGroup) {
     this.skillsG = skillsG;
-    this.skillMap = skillMap;
   }
 
   public updateSkills(key: string, selectedSkills: any[]) {
@@ -99,7 +144,7 @@ export class PortfolioService {
   }
 
   public getEducations() {
-    this.educations!.map(item => {
+    this.educations?.map(item => {
       item.vid = this.eduVid++;
     })
     return this.educations;
@@ -139,7 +184,7 @@ export class PortfolioService {
   }
 
   public getProjects() {
-    this.projects!.map(item => {
+    this.projects?.map(item => {
       item.vid = this.proVid++;
     })
     return this.projects;
@@ -169,9 +214,8 @@ export class PortfolioService {
     console.log('publish');
 
     let formData: FormData = new FormData();
-
-    formData.append("username", "kim5");
-    formData.append("password", "kim");
+    let username = "xiao66";
+    formData.append("username", username);
     if (this.fileMap.get('logo')) {
       formData.append("header-logo", this.fileMap.get('logo'));
     }
@@ -195,7 +239,7 @@ export class PortfolioService {
       formData.append(filename, file);
     })
 
-    this.http.post(PortfolioService.url, formData, { reportProgress: true, responseType: 'json' }).subscribe(resp => {
+    this.http.post(PortfolioService.url + username, formData, { reportProgress: true, responseType: 'json' }).subscribe(resp => {
       console.log(resp);
     });
   }

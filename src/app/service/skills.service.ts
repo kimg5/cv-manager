@@ -1,3 +1,8 @@
+import { Injectable } from "@angular/core";
+
+@Injectable({
+  providedIn: 'root'
+})
 export class SkillsService {
   static frontendSkills = ["HTML","CSS","JavaScript","Bootstrap","Tailwind","React"];
 
