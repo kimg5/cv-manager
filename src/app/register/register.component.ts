@@ -25,7 +25,7 @@ export class RegisterComponent {
 
   register() {
     this.authService.register(this.registerForm.value).subscribe(resp =>{
-      this.messageService.add(resp.message);
+      this.messageService.add({severity:'info', summary:'Service Message', detail:resp.message});
       if(resp.success){
         this.router.navigate(['/login']);
       }

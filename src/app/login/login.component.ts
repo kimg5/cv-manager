@@ -21,7 +21,8 @@ export class LoginComponent {
   login() {
     console.log(this.loginForm.value);
     this.authService.login(this.loginForm.value).subscribe(resp => {
-      this.messageService.add(resp.message);
+      //this.messageService.add(resp.message);
+      this.messageService.add({severity:'info', summary:'Service Message', detail:resp.message});
       if (resp.success) {
         this.authService.loginSuccess(resp.content,this.loginForm.value);
         this.router.navigate(['/home']);
