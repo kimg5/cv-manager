@@ -28,12 +28,12 @@ import { SkillsService } from '../../service/skills.service';
       </div>
       <div class="field col-11">
         <p-card header="Frontend Skills">
-          <app-skill-pick-list [skills]="service.allFrontSkills" key="frontend" [selectedSkills]="service.skillMap.get('frontend')"></app-skill-pick-list> 
+          <app-skill-pick-list [skills]="service.allFrontSkills" key="frontend" [selectedSkills]="service.skillMap.get('frontend')||[]"></app-skill-pick-list> 
         </p-card>  
       </div>
       <div class="field col-11">
         <p-card header="Backend Skills">
-          <app-skill-pick-list [skills]="service.allBackSkills" key="backend" [selectedSkills]="service.skillMap.get('backend')"></app-skill-pick-list> 
+          <app-skill-pick-list [skills]="service.allBackSkills" key="backend" [selectedSkills]="service.skillMap.get('backend')||[]"></app-skill-pick-list> 
         </p-card>
       </div>  
     </div>
@@ -47,7 +47,7 @@ export class SkillsComponent implements OnInit {
   subtitle: any;
   
   txtInputClass!: string;
-  
+
   constructor(private skillsService: SkillsService,public service: PortfolioService, private fb: FormBuilder) {
     this.txtInputClass = "text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full";
     this.skillsG = this.fb.group({
@@ -60,5 +60,12 @@ export class SkillsComponent implements OnInit {
   ngOnInit(): void {
     this.title = this.skillsG.get('title');
     this.subtitle = this.skillsG.get('subtitle');
+    console.log('------');
+    console.log(this.service.allFrontSkills);
+    console.log(this.service.allBackSkills);
+
+    console.log(this.service.skillMap.get('frontend'))
+    console.log(this.service.skillMap.get('backend'))
+    console.log('------');
   }
 }

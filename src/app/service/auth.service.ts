@@ -44,5 +44,6 @@ export class AuthService {
     this.isLoggedIn = false;
     sessionStorage.removeItem('role');
     sessionStorage.removeItem('token');
+    sessionStorage.removeItem('username');
   }
 }

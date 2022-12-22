@@ -1,6 +1,7 @@
-import { HttpClient, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { Injectable, ɵclearResolutionOfComponentResourcesQueue } from '@angular/core';
 import { FormGroup } from '@angular/forms';
+import { catchError, throwError } from 'rxjs';
 import { Education } from '../domain/education';
 import { Project } from '../domain/project';
 import { AuthService } from './auth.service';
@@ -18,8 +19,8 @@ export class PortfolioService {
 
   public skillsG!: FormGroup;
   public skillMap: Map<string, any> = new Map();
-  public allFrontSkills : any[];
-  public allBackSkills : any[]
+  public allFrontSkills : any[] = [];
+  public allBackSkills : any[] = []
 
   public frontendKey: string = "frontend";
   public frontendTitle: string = "Frontend Skills";
@@ -28,10 +29,10 @@ export class PortfolioService {
   public backendTitle: string = "Backend Skills";
   public backendCss: string = "experience__backend";
 
-  public educations!: any[];
+  public educations: any[] = [];
   public eduVid = 0;
 
-  public projects!: any[]
+  public projects: any[] = [];
   public proVid = 0;
 
   public fileMap!: Map<string, any>;
@@ -42,6 +43,7 @@ export class PortfolioService {
     this.projectFileMap = new Map();
     this.allBackSkills = skillsService.getBackendSkills();
     this.allFrontSkills = skillsService.getFrontendSkills();
+
   }
 
   public setHeaderG(headerG: FormGroup) {
@@ -49,7 +51,7 @@ export class PortfolioService {
   }
 
   public getPortfolio(username: string) {
-    this.http.get<any>(PortfolioService.url + username).subscribe(resp => {
+    this.http.get<any>(PortfolioService.url + username).pipe(catchError(this.handleError)).subscribe(resp => {
       console.log(resp);
       if(resp.success){
         let data = resp.content;
@@ -59,7 +61,23 @@ export class PortfolioService {
         this.projects = data.projects;
         this.initSkills(data.experience);
       }
-    })
+    });
+  }
+
+  private handleError(error: HttpErrorResponse) {
+    if (error.status === 0) {
+      // A client-side or network error occurred. Handle it accordingly.
+      console.error('An error occurred:', error.error);
+    } else {
+      // The backend returned an unsuccessful response code.
+      // The response body may contain clues as to what went wrong.
+      console.error(
+        `Backend returned code ${error.status}, body was: `, error.error);
+    }
+    // Return an observable with a user-facing error message.
+    console.log(this.skillMap);
+    
+    return throwError(() => new Error('Something bad happened; please try again later.'));
   }
   
   initHeader(data:any) {
