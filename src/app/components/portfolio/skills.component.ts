@@ -33,7 +33,7 @@ import { SkillsService } from '../../service/skills.service';
       </div>
       <div class="field col-11">
         <p-card header="Backend Skills">
-          <app-skill-pick-list [skills]="service.allFrontSkills" key="backend" [selectedSkills]="service.skillMap.get('frontend')"></app-skill-pick-list> 
+          <app-skill-pick-list [skills]="service.allBackSkills" key="backend" [selectedSkills]="service.skillMap.get('backend')"></app-skill-pick-list> 
         </p-card>
       </div>  
     </div>
