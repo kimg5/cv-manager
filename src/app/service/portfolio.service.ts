@@ -3,6 +3,7 @@ import { Injectable, ɵclearResolutionOfComponentResourcesQueue } from '@angular
 import { FormGroup } from '@angular/forms';
 import { Education } from '../domain/education';
 import { Project } from '../domain/project';
+import { AuthService } from './auth.service';
 import { SkillsService } from './skills.service';
 
 @Injectable({
@@ -36,7 +37,7 @@ export class PortfolioService {
   public fileMap!: Map<string, any>;
   public projectFileMap!: Map<string, any>;
 
-  constructor(private http: HttpClient,private skillsService: SkillsService) {
+  constructor(private http: HttpClient,private skillsService: SkillsService, private authService: AuthService) {
     this.fileMap = new Map();
     this.projectFileMap = new Map();
     this.allBackSkills = skillsService.getBackendSkills();
@@ -51,10 +52,8 @@ export class PortfolioService {
     this.http.get<any>(PortfolioService.url + username).subscribe(resp => {
       console.log(resp);
       if(resp.success){
-        console.log('---------------');
         let data = resp.content;
-        console.log(data);
-    
+       
         this.initHeader(data)
         this.educations = data.education;
         this.projects = data.projects;
@@ -214,7 +213,7 @@ export class PortfolioService {
     console.log('publish');
 
     let formData: FormData = new FormData();
-    let username = "xiao66";
+    let username = this.authService.username;
     formData.append("username", username);
     if (this.fileMap.get('logo')) {
       formData.append("header-logo", this.fileMap.get('logo'));

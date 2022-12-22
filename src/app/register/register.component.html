@@ -1,1 +1,93 @@
-<p>register works!</p>
+<div class="register">
+    <form [formGroup]="registerForm" (ngSubmit)="register()">
+        <div class="flex flex-column align-items-center justify-content-center">
+            <div style="border-radius: 56px; padding: 0.3rem">
+                <div
+                    class="w-full surface-card py-8 px-5 sm:px-8"
+                    style="border-radius: 20px"
+                >
+                    <div class="text-center mb-5">
+                        <div class="text-900 text-3xl font-medium mb-3">
+                            Register Form
+                        </div>
+                    </div>
+                    <div>
+                        <label
+                            for="username"
+                            class="block text-900 text-xl font-medium mb-2"
+                            >Username</label
+                        >
+                        <input
+                            id="username"
+                            type="text"
+                            placeholder="Username"
+                            pInputText
+                            class="w-full md:w-30rem mb-5"
+                            style="padding: 1rem"
+                           formControlName="username"
+                        />
+
+                        <label
+                            for="password"
+                            class="block text-900 font-medium text-xl mb-2"
+                            >Password</label
+                        >
+                        <p-password
+                            id="password"
+                            placeholder="Password"
+                            styleClass="mb-5"
+                            inputStyleClass="w-full p-3 md:w-30rem"
+                            formControlName="password"
+                            type="password"
+                        ></p-password>
+
+                        <label
+                            for="email"
+                            class="block text-900 text-xl font-medium mb-2"
+                            >Email</label
+                        >
+                        <input
+                            id="email"
+                            type="text"
+                            placeholder="Email"
+                            pInputText
+                            class="w-full md:w-30rem mb-5"
+                            style="padding: 1rem"
+                           formControlName="email"
+                        />
+                        
+                        <label
+                            for="card"
+                            class="block text-900 text-xl font-medium mb-2"
+                            >Card</label
+                        >
+                        <input
+                            id="card"
+                            type="text"
+                            placeholder="Card"
+                            pInputText
+                            class="w-full md:w-30rem mb-5"
+                            style="padding: 1rem"
+                           formControlName="card"
+                        />
+                    </div>
+
+                    <div class="flex card-container align-items-center">
+                        <div class="flex-2 align-items-center">
+                            <p-button class="p-8" styleClass="p-button-medium" type="submit"
+                            [disabled]="!registerForm.valid">Register</p-button
+                            >
+                        </div>
+                        <div class="flex-2 align-items-center">
+                            <p-button
+                                class="w-full p-3"
+                                styleClass="p-button-medium" (click)="register()"
+                                >Cancel</p-button
+                            >
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

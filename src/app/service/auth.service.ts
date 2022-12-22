@@ -7,7 +7,10 @@ import { delay, Observable, of, tap } from 'rxjs';
 })
 export class AuthService {
   loginUrl = "http://localhost:3001/auth/login";
+  registerUrl = "http://localhost:3001/auth/register";
+
   isLoggedIn = false;
+  username:string;
   role: string;
   token: string;
   redirectUrl: string | null = null;
@@ -15,19 +18,26 @@ export class AuthService {
   constructor(private http: HttpClient) {
     this.role = sessionStorage.getItem('role') || 'anonymous';
     this.token = sessionStorage.getItem('token') || '';
+    this.username = sessionStorage.getItem('username') || '';
   }
 
-  login(loginObj : any): Observable<boolean> {
-    this.http.post(this.loginUrl,loginObj).subscribe(
-      resp => {
-        console.log(resp);
-      }
-    )
+  loginSuccess(resp: any,loginObj: any) {
+    console.log(resp);
+    this.token = resp.token;
+    this.isLoggedIn = true;
+    this.role = resp.role;
+    this.username = loginObj.username;
+    sessionStorage.setItem('token', this.token);
+    sessionStorage.setItem('role', this.role);
+    sessionStorage.setItem('username', this.username);
+  }
 
-    return of(true).pipe(
-      delay(1000),
-      tap(() => this.isLoggedIn = true)
-    );
+  login(loginObj: any): Observable<any> {
+    return this.http.post<any>(this.loginUrl, loginObj);
+  }
+
+  register(registerObj: any): Observable<any> {
+    return this.http.post<any>(this.registerUrl, registerObj);
   }
 
   logout(): void {

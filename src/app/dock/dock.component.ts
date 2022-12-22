@@ -5,6 +5,8 @@ import { DynamicDialogRef } from 'primeng/dynamicdialog';
 import { DockService } from '../service/dock.service';
 import { DockItemMap } from '../components/panels.module';
 import { PortfolioService } from '../service/portfolio.service';
+import { AuthService } from '../service/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-dock',
@@ -12,13 +14,13 @@ import { PortfolioService } from '../service/portfolio.service';
   styleUrls: ['./dock.component.scss'],
   providers: [DialogService],
 })
-export class DockComponent implements OnInit,OnDestroy {
+export class DockComponent implements OnInit, OnDestroy {
 
   dockItems!: any[];
   ref!: DynamicDialogRef;
   dialogConfig!: any;
 
-  constructor(public dialogService: DialogService, public messageService: MessageService, private dockService: DockService, private portfolioService: PortfolioService) { 
+  constructor(private router: Router, public authService: AuthService, public dialogService: DialogService, public messageService: MessageService, private dockService: DockService, private portfolioService: PortfolioService) {
     this.dialogConfig = {
       width: '98vw',
       height: '98vh',
@@ -50,7 +52,12 @@ export class DockComponent implements OnInit,OnDestroy {
     this.ref = this.dialogService.open(component, this.dialogConfig);
 
     if (label === 'Portfolio') {
-      this.portfolioService.getPortfolio("xiao");
+      if (this.authService.isLoggedIn) {
+        this.portfolioService.getPortfolio(this.authService.username);
+      } else {
+        this.router.navigate(['/login']);
+      }
+
     }
 
   }
